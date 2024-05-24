@@ -5,7 +5,7 @@ export default function Home() {
         {["Nico", "Me", "You", "Yourself"].map((person, index) => (
           <div
             key={index}
-            className="flex items-center gap-5 rounded-xl p-2.5 odd:bg-gray-100 even:bg-cyan-100"
+            className="flex items-center gap-5 border-b-2 pb-5 last:border-0 last:pb-0"
           >
             <div className="size-10 rounded-full bg-blue-400" />
             <span className="text-lg font-medium">{person}</span>
