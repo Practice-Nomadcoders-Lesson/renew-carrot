@@ -1,22 +1,8 @@
-"use client";
-
 import { FormButton } from "@/components/form-btn";
 import { FormInput } from "@/components/form-input";
 import { SocialLogin } from "@/components/social-login";
 
 const LoginPage = () => {
-  const onClick = async () => {
-    const response = await fetch("/www/users", {
-      method: "POST",
-      body: JSON.stringify({
-        username: "insu",
-        password: "1234",
-      }),
-    });
-
-    console.log(await response.json());
-  };
-
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -32,10 +18,9 @@ const LoginPage = () => {
           errors={[]}
           placeholder="Password"
         />
-      </form>
-      <span onClick={onClick}>
         <FormButton loading={false} text="Log in" />
-      </span>
+      </form>
+
       <SocialLogin />
     </div>
   );
