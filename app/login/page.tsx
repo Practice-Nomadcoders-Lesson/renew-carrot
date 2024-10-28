@@ -3,6 +3,11 @@ import { FormInput } from "@/components/form-input";
 import { SocialLogin } from "@/components/social-login";
 
 const LoginPage = () => {
+  const handleForm = async (formData: FormData) => {
+    "use server";
+    console.log(formData.get("email"), formData.get("password"));
+  };
+
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -10,11 +15,18 @@ const LoginPage = () => {
         <h2 className="text-xl">Log in with email and password</h2>
       </div>
 
-      <form className="flex flex-col gap-3">
-        <FormInput required type="email" errors={[]} placeholder="Email" />
+      <form className="flex flex-col gap-3" action={handleForm}>
+        <FormInput
+          required
+          name="email"
+          type="email"
+          errors={[]}
+          placeholder="Email"
+        />
         <FormInput
           required
           type="password"
+          name="password"
           errors={[]}
           placeholder="Password"
         />

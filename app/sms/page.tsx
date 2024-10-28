@@ -13,12 +13,14 @@ const SMSLoginPage = () => {
         <FormInput
           required
           type="number"
+          name="phoneNumber"
           errors={[]}
           placeholder="Phone number"
         />
         <FormInput
           required
           type="number"
+          name="verificationCode"
           errors={[]}
           placeholder="Verification code"
         />

@@ -11,17 +11,31 @@ const CreateAccountPage = () => {
       </div>
 
       <form className="flex flex-col gap-3">
-        <FormInput required type="text" errors={[]} placeholder="Username" />
-        <FormInput required type="email" errors={[]} placeholder="Email" />
+        <FormInput
+          required
+          type="text"
+          name="userName"
+          errors={[]}
+          placeholder="Username"
+        />
+        <FormInput
+          required
+          type="email"
+          name="email"
+          errors={[]}
+          placeholder="Email"
+        />
         <FormInput
           required
           type="password"
+          name="password"
           errors={[]}
           placeholder="Password"
         />
         <FormInput
           required
           type="password"
+          name="confirmPassword"
           errors={[]}
           placeholder="Confirm Password"
         />
