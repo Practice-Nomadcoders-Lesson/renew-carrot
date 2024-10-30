@@ -1,8 +1,12 @@
 import { FormButton } from "@/components/form-btn";
 import { FormInput } from "@/components/form-input";
 import { SocialLogin } from "@/components/social-login";
+import { useFormState } from "react-dom";
+import { createAccount } from "./actions";
 
 const CreateAccountPage = () => {
+  const [state, dispatch] = useFormState(createAccount, null);
+
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -10,11 +14,11 @@ const CreateAccountPage = () => {
         <h2 className="text-xl">Fill in the form below to join!</h2>
       </div>
 
-      <form className="flex flex-col gap-3">
+      <form action={dispatch} className="flex flex-col gap-3">
         <FormInput
           required
           type="text"
-          name="userName"
+          name="username"
           errors={[]}
           placeholder="Username"
         />
@@ -39,7 +43,7 @@ const CreateAccountPage = () => {
           errors={[]}
           placeholder="Confirm Password"
         />
-        <FormButton loading={false} text="Create account" />
+        <FormButton text="Create account" />
       </form>
       <SocialLogin />
     </div>
