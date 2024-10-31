@@ -1,3 +1,5 @@
+"use client";
+
 import { FormButton } from "@/components/form-btn";
 import { FormInput } from "@/components/form-input";
 import { SocialLogin } from "@/components/social-login";
@@ -19,28 +21,28 @@ const CreateAccountPage = () => {
           required
           type="text"
           name="username"
-          errors={[]}
+          errors={state?.fieldErrors.username}
           placeholder="Username"
         />
         <FormInput
           required
           type="email"
           name="email"
-          errors={[]}
+          errors={state?.fieldErrors.email}
           placeholder="Email"
         />
         <FormInput
           required
           type="password"
           name="password"
-          errors={[]}
+          errors={state?.fieldErrors.password}
           placeholder="Password"
         />
         <FormInput
           required
           type="password"
           name="confirmPassword"
-          errors={[]}
+          errors={state?.fieldErrors.confirmPassword}
           placeholder="Confirm Password"
         />
         <FormButton text="Create account" />
