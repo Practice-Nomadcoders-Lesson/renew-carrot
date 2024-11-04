@@ -1,7 +1,7 @@
 "use client";
 
-import { FormButton } from "@/components/form-btn";
-import { FormInput } from "@/components/form-input";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
 import { SocialLogin } from "@/components/social-login";
 import { useFormState } from "react-dom";
 import { createAccount } from "./actions";
@@ -17,35 +17,39 @@ const CreateAccountPage = () => {
       </div>
 
       <form action={dispatch} className="flex flex-col gap-3">
-        <FormInput
+        <Input
           required
           type="text"
           name="username"
           errors={state?.fieldErrors.username}
           placeholder="Username"
+          minLength={3}
+          maxLength={10}
         />
-        <FormInput
+        <Input
           required
           type="email"
           name="email"
           errors={state?.fieldErrors.email}
           placeholder="Email"
         />
-        <FormInput
+        <Input
           required
           type="password"
           name="password"
           errors={state?.fieldErrors.password}
           placeholder="Password"
+          minLength={4}
         />
-        <FormInput
+        <Input
           required
           type="password"
           name="confirmPassword"
           errors={state?.fieldErrors.confirmPassword}
           placeholder="Confirm Password"
+          minLength={4}
         />
-        <FormButton text="Create account" />
+        <Button text="Create account" />
       </form>
       <SocialLogin />
     </div>
