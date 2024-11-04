@@ -26,6 +26,7 @@ const formSchema = z
       .max(10, "That is too looong!")
       .toLowerCase()
       .trim()
+      .transform((username) => `⭐️${username}`)
       .refine(checkUsername, "No potatoes allowed!"),
     email: z.string().email().toLowerCase(),
     password: z
@@ -53,5 +54,7 @@ export const createAccount = async (prevState: any, formData: FormData) => {
   const result = formSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
+  } else {
+    console.log(result.data);
   }
 };
