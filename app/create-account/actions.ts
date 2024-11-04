@@ -2,6 +2,8 @@
 
 import { z } from "zod";
 
+const checkUsername = (username: string) => !username.includes("potato");
+
 const formSchema = z.object({
   username: z
     .string({
@@ -9,7 +11,8 @@ const formSchema = z.object({
       required_error: "Where is my username?",
     })
     .min(3, "Way too short!!!")
-    .max(10, "That is too looong!"),
+    .max(10, "That is too looong!")
+    .refine(checkUsername, "No potatoes allowed!"),
   email: z.string().email(),
   password: z.string().min(10),
   confirmPassword: z.string().min(10),
