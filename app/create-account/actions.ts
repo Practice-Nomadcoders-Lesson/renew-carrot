@@ -2,6 +2,10 @@
 
 import { z } from "zod";
 
+const passwordRegex = new RegExp(
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/,
+);
+
 const checkUsername = (username: string) => !username.includes("potato");
 const checkPassword = ({
   password,
@@ -22,7 +26,13 @@ const formSchema = z
       .max(10, "That is too looong!")
       .refine(checkUsername, "No potatoes allowed!"),
     email: z.string().email(),
-    password: z.string().min(10),
+    password: z
+      .string()
+      .min(10)
+      .regex(
+        passwordRegex,
+        "A password must have lowercase, UPPERCASE, a number and special characters.",
+      ),
     confirmPassword: z.string().min(10),
   })
   .refine(checkPassword, {
