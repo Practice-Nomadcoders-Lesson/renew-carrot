@@ -7,9 +7,7 @@ import { useFormState } from "react-dom";
 import { login } from "./actions";
 
 const LoginPage = () => {
-  const [state, action] = useFormState(login, {
-    potato: 1,
-  } as any);
+  const [state, action] = useFormState(login, null);
 
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
@@ -23,14 +21,14 @@ const LoginPage = () => {
           required
           name="email"
           type="email"
-          errors={[]}
+          errors={state?.fieldErrors.email}
           placeholder="Email"
         />
         <Input
           required
           type="password"
           name="password"
-          errors={state?.errors ?? []}
+          errors={state?.fieldErrors.password}
           placeholder="Password"
         />
         <Button text="Log in" />

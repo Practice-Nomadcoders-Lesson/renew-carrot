@@ -1,7 +1,11 @@
 "use server";
 
 import { z } from "zod";
-import { PASSWORD_MIN_LENGTH, PASSWORD_REGEX } from "@/lib/constants";
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from "@/lib/constants";
 
 const checkUsername = (username: string) => !username.includes("potato");
 const checkPassword = ({
@@ -27,10 +31,7 @@ const formSchema = z
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH)
-      .regex(
-        PASSWORD_REGEX,
-        "A password must have lowercase, UPPERCASE, a number and special characters.",
-      ),
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirmPassword: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .refine(checkPassword, {
