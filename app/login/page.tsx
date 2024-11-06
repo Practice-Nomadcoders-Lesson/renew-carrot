@@ -1,13 +1,13 @@
 "use client";
 
-import { FormButton } from "@/components/button";
-import { FormInput } from "@/components/input";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
 import { SocialLogin } from "@/components/social-login";
 import { useFormState } from "react-dom";
-import { handleForm } from "./actions";
+import { login } from "./actions";
 
 const LoginPage = () => {
-  const [state, action] = useFormState(handleForm, {
+  const [state, action] = useFormState(login, {
     potato: 1,
   } as any);
 
@@ -19,21 +19,21 @@ const LoginPage = () => {
       </div>
 
       <form className="flex flex-col gap-3" action={action}>
-        <FormInput
+        <Input
           required
           name="email"
           type="email"
           errors={[]}
           placeholder="Email"
         />
-        <FormInput
+        <Input
           required
           type="password"
           name="password"
           errors={state?.errors ?? []}
           placeholder="Password"
         />
-        <FormButton text="Log in" />
+        <Button text="Log in" />
       </form>
 
       <SocialLogin />
