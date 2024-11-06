@@ -1,7 +1,15 @@
-import { FormButton } from "@/components/button";
-import { FormInput } from "@/components/input";
+"use client";
+
+import { useFormState } from "react-dom";
+
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+
+import { smsVerification } from "./actions";
 
 const SMSLoginPage = () => {
+  const [state, dispatch] = useFormState(smsVerification, null);
+
   return (
     <div className="flex flex-col gap-10 px-6 py-8">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -10,21 +18,21 @@ const SMSLoginPage = () => {
       </div>
 
       <form className="flex flex-col gap-3">
-        <FormInput
+        <Input
           required
           type="number"
-          name="phoneNumber"
+          name="phone"
           errors={[]}
           placeholder="Phone number"
         />
-        <FormInput
+        <Input
           required
           type="number"
-          name="verificationCode"
+          name="token"
           errors={[]}
           placeholder="Verification code"
         />
-        <FormButton loading={false} text="Verify" />
+        <Button text="Verify" />
       </form>
     </div>
   );
