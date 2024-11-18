@@ -51,6 +51,14 @@ export const createAccount = async (prevState: any, formData: FormData) => {
   if (!result.success) {
     return result.error.flatten();
   } else {
+    // Validation 통과
+
+    // TODO: check if username already exists
+    // TODO: check if the email is already used
+    // TODO: hash password
+    // TODO: save the suer to db
+    // TODO: log the user in
+    // TODO: redirect "/home"
     console.log(result.data);
   }
 };
