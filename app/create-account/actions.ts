@@ -1,6 +1,8 @@
 "use server";
 
 import { z } from "zod";
+import bcrypt from "bcrypt";
+
 import {
   PASSWORD_MIN_LENGTH,
   PASSWORD_REGEX,
@@ -89,10 +91,24 @@ export const createAccount = async (prevState: any, formData: FormData) => {
   } else {
     // Validation 통과
 
-    // TODO: hash password
-    // TODO: save the suer to db
+    // hash password
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
+
+    // save the suer to db
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    console.log(user);
+
     // TODO: log the user in
     // TODO: redirect "/home"
-    console.log(result.data);
   }
 };
