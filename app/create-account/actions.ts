@@ -12,6 +12,7 @@ import db from "@/lib/db";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/session";
 
 const checkUsername = (username: string) => !username.includes("potato");
 const checkPassword = ({
@@ -110,11 +111,8 @@ export const createAccount = async (prevState: any, formData: FormData) => {
     });
 
     // log the user in
-    const session = await getIronSession(cookies(), {
-      cookieName: "delicious-carrot",
-      password: process.env.COOKIE_PASSWORD!,
-    });
-    // @ts-ignore
+    const session = await getSession();
+
     session.id = user.id;
     await session.save();
 
