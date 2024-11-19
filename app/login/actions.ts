@@ -26,6 +26,10 @@ export const login = async (prevState: any, formData: FormData) => {
   if (!result.success) {
     return result.error.flatten();
   } else {
+    // find a user with the email
+    // if the user is found, check password hash
+    // log the user in
+    // redirect "/profile"
     console.log(result.data);
   }
 };
