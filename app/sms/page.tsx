@@ -31,6 +31,7 @@ const SMSLoginPage = () => {
             min={100000}
             max={999999}
             placeholder="Verification code"
+            errors={state.error?.formErrors}
           />
         ) : (
           <Input
