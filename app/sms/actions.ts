@@ -1,5 +1,6 @@
 "use server";
 
+import twilio from "twilio";
 import crypto from "crypto";
 import { z } from "zod";
 import validator from "validator";
@@ -98,6 +99,17 @@ export const smsLogin = async (prevState: ActionState, formData: FormData) => {
       });
 
       // send the token using twilio
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+
+      await client.messages.create({
+        body: `Your Carrot verification code is: ${token}`,
+        from: process.env.TWILIO_PHONE_NUMBER!,
+        to: process.env.MY_PHONE_NUMBER!, // result.data(유료계정이 아니어서 내 전화번호 넣음)
+      });
+
       return {
         token: true,
       };
