@@ -1,7 +1,7 @@
 "use client";
 
 import ListProduct from "./list-product";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InitialProducts } from "@/app/(tabs)/products/page";
 import { getMoreProducts } from "@/app/(tabs)/products/actions";
 
@@ -16,37 +16,62 @@ export const ProductList = ({ initialProducts }: ProductListProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
 
-  const onLoadMoreClick = async () => {
-    setIsLoading(true);
-    const newProducts = await getMoreProducts(page + 1);
+  const trigger = useRef<HTMLSpanElement>(null);
 
-    if (newProducts.length !== 0) {
-      setPage((prev) => prev + 1);
-      setProducts((prev) => [...prev, ...newProducts]);
-    } else {
-      setIsLastPage(true);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async (
+        entries: IntersectionObserverEntry[],
+        observer: IntersectionObserver,
+      ) => {
+        const element = entries[0];
+        if (element.isIntersecting && trigger.current) {
+          observer.unobserve(trigger.current);
+
+          setIsLoading(true);
+
+          const newProducts = await getMoreProducts(page + 1);
+
+          if (newProducts.length !== 0) {
+            setPage((prev) => prev + 1);
+            setProducts((prev) => [...prev, ...newProducts]);
+          } else {
+            setIsLastPage(true);
+          }
+
+          setIsLoading(false);
+        }
+      },
+      { threshold: 1.0, rootMargin: "0px 0px -200px 0px" },
+    );
+
+    if (trigger.current) {
+      observer.observe(trigger.current);
     }
 
-    setIsLoading(false);
-  };
+    return () => {
+      observer.disconnect();
+    };
+  }, [page]);
 
   return (
     <div className="flex flex-col gap-5 p-5">
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
-
       {isLastPage === false && (
-        <button
-          onClick={onLoadMoreClick}
-          disabled={isLoading}
-          className="
-      mx-auto w-fit rounded-md bg-orange-500 px-3 py-2 text-sm
+        <span
+          ref={trigger}
+          style={{
+            marginTop: `${page + 1 * 300}vh`,
+          }}
+          className="mx-auto mb-96
+      mt-[300vh] w-fit rounded-md bg-orange-500 px-3 py-2 text-sm
       font-semibold hover:opacity-90 active:scale-95
       "
         >
           {isLoading ? "로딩 중" : "Load more"}
-        </button>
+        </span>
       )}
     </div>
   );
