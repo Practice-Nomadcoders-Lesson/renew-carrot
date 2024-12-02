@@ -2,6 +2,9 @@
 
 import { z } from "zod";
 import fs from "fs/promises";
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { redirect } from "next/navigation";
 
 const productSchema = z.object({
   photo: z.string({
@@ -18,7 +21,7 @@ const productSchema = z.object({
   }),
 });
 
-export async function uploadProduct(formData: FormData) {
+export async function uploadProduct(_: any, formData: FormData) {
   const data = {
     photo: formData.get("photo"),
     title: formData.get("title"),
@@ -32,9 +35,36 @@ export async function uploadProduct(formData: FormData) {
   if (data.photo instanceof File) {
     const photoData = await data.photo.arrayBuffer();
     await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    console.log(photoData);
+    data.photo = `/${data.photo.name}`;
   }
 
-  /* const results = productSchema.parse(data);
-  console.log({ results }); */
+  const result = productSchema.safeParse(data);
+  if (!result.success) {
+    return result.error.flatten();
+  } else {
+    const session = await getSession();
+    if (session.id) {
+      const product = await db.product.create({
+        data: {
+          title: result.data.title,
+          description: result.data.description,
+          price: result.data.price,
+          photo: result.data.photo,
+          user: {
+            connect: {
+              id: session.id,
+            },
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      // 제품 상세 페이지로 이동
+      redirect(`/products/${product.id}`);
+
+      // 제품 리스트 페이지로 이동
+      // redirect("/products");
+    }
+  }
 }
