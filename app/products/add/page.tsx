@@ -5,18 +5,26 @@ import { useState } from "react";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { uploadProduct } from "./actions";
+import { getUploadUrl, uploadProduct } from "./actions";
 import { useFormState } from "react-dom";
 
 const AddProductPage = () => {
   const [preview, setPreview] = useState("");
+  const [uploadUrl, setUploadUrl] = useState("");
   const [state, action] = useFormState(uploadProduct, null);
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.currentTarget.files) return;
 
     const file = event.currentTarget.files[0];
     const url = URL.createObjectURL(file);
     setPreview(url);
+
+    // upload URL 얻기
+    const { success, result } = await getUploadUrl();
+    if (success) {
+      const { id, uploadURL } = result;
+      setUploadUrl(uploadURL);
+    }
   };
 
   return (
