@@ -1,7 +1,6 @@
 "use server";
 
 import { z } from "zod";
-import fs from "fs/promises";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
@@ -28,15 +27,6 @@ export async function uploadProduct(_: any, formData: FormData) {
     price: formData.get("price"),
     description: formData.get("description"),
   };
-
-  // 파일 형태인지 확인
-  // Buffer에 타입에러가 난다면 아래 명령어로 @types/node 패키지를 업데이트 할 것.
-  // npm install --save-dev @types/node@latest
-  if (data.photo instanceof File) {
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
-  }
 
   const result = productSchema.safeParse(data);
   if (!result.success) {
@@ -67,4 +57,19 @@ export async function uploadProduct(_: any, formData: FormData) {
       // redirect("/products");
     }
   }
+}
+
+export async function getUploadUrl() {
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CLOUDFLARE_TOKEN}`,
+      },
+    },
+  );
+
+  const data = await response.json();
+  return data;
 }
