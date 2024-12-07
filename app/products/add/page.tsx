@@ -11,7 +11,8 @@ import { useFormState } from "react-dom";
 const AddProductPage = () => {
   const [preview, setPreview] = useState("");
   const [uploadUrl, setUploadUrl] = useState("");
-  const [state, action] = useFormState(uploadProduct, null);
+  const [imageId, setImageId] = useState("");
+
   const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.currentTarget.files) return;
 
@@ -24,8 +25,36 @@ const AddProductPage = () => {
     if (success) {
       const { id, uploadURL } = result;
       setUploadUrl(uploadURL);
+      setImageId(id);
     }
   };
+
+  // cloudflare로 이미지 업로드
+  // formData로 받은 파일을 업로드 후 URL로 대체
+  const interceptAction = async (_: any, formData: FormData) => {
+    const file = formData.get("photo");
+    if (!file) return;
+
+    // upload image to cloudflare
+    const cloudflareForm = new FormData();
+    cloudflareForm.append("file", file);
+
+    const response = await fetch(uploadUrl, {
+      method: "post",
+      body: cloudflareForm,
+    });
+
+    if (response.status !== 200) return;
+
+    //replace 'photo' in formData
+    const photoUrl = `${process.env.NEXT_PUBLIC_IMAGE_DELIVERYURL}/${imageId}`;
+    formData.set("photo", photoUrl);
+
+    // call upload product
+    return uploadProduct(_, formData);
+  };
+
+  const [state, action] = useFormState(interceptAction, null);
 
   return (
     <div>
