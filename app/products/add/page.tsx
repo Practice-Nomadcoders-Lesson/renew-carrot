@@ -24,6 +24,15 @@ const AddProductPage = () => {
     if (success) {
       const { id, uploadURL } = result;
       setUploadUrl(uploadURL);
+
+      // cloudflare로 이미지 업로드
+      // formData로 받은 파일을 업로드 후 URL로 대체
+      const interceptAction = async (_: any, formData: FormData) => {
+        // TODO: upload image to cloudflare
+        // TODO: replace 'photo' in formData
+        // TODO: call upload product
+      };
+      console.log({ uploadURL });
     }
   };
 
