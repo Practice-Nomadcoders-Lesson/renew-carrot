@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
   } else {
     // 사용자가 로그인상태 일 경우
     if (exists) {
-      return NextResponse.redirect(new URL("/products", request.url));
+      return NextResponse.redirect(new URL("/home", request.url));
     }
   }
 }
