@@ -59,7 +59,7 @@ export const ProductList = ({ initialProducts }: ProductListProps) => {
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
-      {isLastPage === false && (
+      {/* {isLastPage === false && (
         <span
           ref={trigger}
           className="mx-auto w-fit rounded-md bg-orange-500 px-3 py-2 text-sm
@@ -67,7 +67,7 @@ export const ProductList = ({ initialProducts }: ProductListProps) => {
         >
           {isLoading ? "로딩 중" : "Load more"}
         </span>
-      )}
+      )} */}
     </div>
   );
 };
