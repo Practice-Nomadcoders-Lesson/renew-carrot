@@ -1,9 +1,13 @@
-import ListProduct from "@/components/list-product";
-import { ProductList } from "@/components/product-list";
 import db from "@/lib/db";
-import { PlusIcon } from "@heroicons/react/24/solid";
-import { Prisma } from "@prisma/client";
 import Link from "next/link";
+import { Prisma } from "@prisma/client";
+
+import { ProductList } from "@/components/product-list";
+import { unstable_cache as nextCache } from "next/cache";
+
+import { PlusIcon } from "@heroicons/react/24/solid";
+
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"]);
 
 async function getInitialProducts() {
   const products = await db.product.findMany({
@@ -31,7 +35,7 @@ export const metadata = {
 };
 
 const ProductsPage = async () => {
-  const initialProducts = await getInitialProducts();
+  const initialProducts = await getCachedProducts();
 
   return (
     <div>
