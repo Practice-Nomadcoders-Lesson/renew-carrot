@@ -34,8 +34,10 @@ export const metadata = {
   title: "Home",
 };
 
+export const dynamic = "force-dynamic";
+
 const ProductsPage = async () => {
-  const initialProducts = await getCachedProducts();
+  const initialProducts = await getInitialProducts();
   const revalidate = async () => {
     "use server";
     revalidatePath("/home");
