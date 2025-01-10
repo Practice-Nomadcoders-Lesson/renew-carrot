@@ -8,10 +8,11 @@ import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 
 async function getIsOwner(userId: number) {
-  const session = await getSession();
+  // getSession은 cookie를 사용합니다.
+  /* const session = await getSession();
   if (session.id) {
     return session.id === userId;
-  }
+  } */
   return false;
 }
 
@@ -130,4 +131,15 @@ export default async function ProductDetail({
       </div>
     </div>
   );
+}
+
+// 함수명을 반드시 generateStaticParams로 작성해야합니다.
+// 그리고 반드시 array를 return해야 합니다.
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return products.map((product) => ({ id: product.id.toString() }));
 }

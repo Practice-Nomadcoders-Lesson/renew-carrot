@@ -3,7 +3,7 @@
 import { useFormState } from "react-dom";
 
 import { Button } from "@/components/button";
-import { Input } from "@/components/input";
+import Input from "@/components/input";
 
 import { smsLogin } from "./actions";
 
