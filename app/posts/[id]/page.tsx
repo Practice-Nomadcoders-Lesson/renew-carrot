@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { formatToTimeAgo } from "@/lib/utils";
 
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
+import getSession from "@/lib/session";
 
 async function getPost(id: number) {
   try {
@@ -55,6 +56,51 @@ export default async function PostDetail({
     return notFound();
   }
 
+  async function getIsLiked(postId: number) {
+    const session = await getSession();
+    const like = await db.like.findUnique({
+      where: {
+        id: {
+          postId,
+          userId: session.id!,
+        },
+      },
+    });
+    return Boolean(like);
+  }
+
+  const likePost = async () => {
+    "use server";
+    try {
+      const session = await getSession();
+      await db.like.create({
+        data: {
+          postId: id,
+          userId: session.id!,
+        },
+      });
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const dislikePost = async () => {
+    "use server";
+    try {
+      const session = await getSession();
+      await db.like.delete({
+        where: {
+          id: {
+            postId: id,
+            userId: session.id!,
+          },
+        },
+      });
+    } catch (error) {}
+  };
+
+  const isLiked = await getIsLiked(id);
+
   return (
     <div className="p-5 text-white">
       <div className="mb-2 flex items-center gap-2">
@@ -79,7 +125,7 @@ export default async function PostDetail({
           <EyeIcon className="size-5" />
           <span>조회 {post.views}</span>
         </div>
-        <form>
+        <form action={isLiked ? dislikePost : likePost}>
           <button className="flex items-center gap-2 rounded-full border border-neutral-400 p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800">
             <HandThumbUpIcon className="size-5" />
             <span>공감하기 ({post._count.likes})</span>
