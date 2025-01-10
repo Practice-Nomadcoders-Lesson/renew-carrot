@@ -2,9 +2,10 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import db from "@/lib/db";
-import { formatToTimeAgo } from "@/lib/utils";
+import { cn, formatToTimeAgo } from "@/lib/utils";
 
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { HandThumbUpIcon as OutlineHandThumbUpIcon } from "@heroicons/react/24/outline";
 import getSession from "@/lib/session";
 import { revalidatePath } from "next/cache";
 
@@ -129,9 +130,24 @@ export default async function PostDetail({
           <span>조회 {post.views}</span>
         </div>
         <form action={isLiked ? dislikePost : likePost}>
-          <button className="flex items-center gap-2 rounded-full border border-neutral-400 p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800">
-            <HandThumbUpIcon className="size-5" />
-            <span>공감하기 ({post._count.likes})</span>
+          <button
+            className={cn(
+              "flex items-center gap-2 rounded-full border border-neutral-400 p-2 text-sm text-neutral-400 transition-colors",
+              isLiked
+                ? "border-orange-500 bg-orange-500 text-white"
+                : "hover:bg-neutral-800",
+            )}
+          >
+            {isLiked ? (
+              <HandThumbUpIcon className="size-5" />
+            ) : (
+              <OutlineHandThumbUpIcon className="size-5" />
+            )}
+            {isLiked ? (
+              <span> {post._count.likes}</span>
+            ) : (
+              <span>공감하기 ({post._count.likes})</span>
+            )}
           </button>
         </form>
       </div>
