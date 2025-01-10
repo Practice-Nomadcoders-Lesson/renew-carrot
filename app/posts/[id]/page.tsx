@@ -6,6 +6,7 @@ import { formatToTimeAgo } from "@/lib/utils";
 
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import getSession from "@/lib/session";
+import { revalidatePath } from "next/cache";
 
 async function getPost(id: number) {
   try {
@@ -79,6 +80,7 @@ export default async function PostDetail({
           userId: session.id!,
         },
       });
+      revalidatePath(`/post/${id}`);
     } catch (error) {
       return null;
     }
@@ -96,6 +98,7 @@ export default async function PostDetail({
           },
         },
       });
+      revalidatePath(`/post/${id}`);
     } catch (error) {}
   };
 
