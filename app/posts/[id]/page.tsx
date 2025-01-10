@@ -8,6 +8,7 @@ import { cn, formatToTimeAgo } from "@/lib/utils";
 
 import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { HandThumbUpIcon as OutlineHandThumbUpIcon } from "@heroicons/react/24/outline";
+import LikeButton from "@/components/like-button";
 
 async function getPost(id: number) {
   try {
@@ -94,36 +95,6 @@ export default async function PostDetail({
 
   const session = await getSession();
 
-  const likePost = async () => {
-    "use server";
-    try {
-      await db.like.create({
-        data: {
-          postId: id,
-          userId: session.id!,
-        },
-      });
-      revalidateTag(`like-status-${id}`);
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const dislikePost = async () => {
-    "use server";
-    try {
-      await db.like.delete({
-        where: {
-          id: {
-            postId: id,
-            userId: session.id!,
-          },
-        },
-      });
-      revalidateTag(`like-status-${id}`);
-    } catch (error) {}
-  };
-
   const { likeCount, isLiked } = await getCachedLikeStatus(id, session.id!);
 
   return (
@@ -150,27 +121,7 @@ export default async function PostDetail({
           <EyeIcon className="size-5" />
           <span>조회 {post.views}</span>
         </div>
-        <form action={isLiked ? dislikePost : likePost}>
-          <button
-            className={cn(
-              "flex items-center gap-2 rounded-full border border-neutral-400 p-2 text-sm text-neutral-400 transition-colors",
-              isLiked
-                ? "border-orange-500 bg-orange-500 text-white"
-                : "hover:bg-neutral-800",
-            )}
-          >
-            {isLiked ? (
-              <HandThumbUpIcon className="size-5" />
-            ) : (
-              <OutlineHandThumbUpIcon className="size-5" />
-            )}
-            {isLiked ? (
-              <span> {likeCount}</span>
-            ) : (
-              <span>공감하기 ({likeCount})</span>
-            )}
-          </button>
-        </form>
+        <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
       </div>
     </div>
   );
