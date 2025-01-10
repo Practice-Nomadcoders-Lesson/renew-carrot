@@ -1,5 +1,10 @@
-import db from "@/lib/db";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+
+import db from "@/lib/db";
+import { formatToTimeAgo } from "@/lib/utils";
+
+import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
 
 async function getPost(id: number) {
   try {
@@ -44,10 +49,43 @@ export default async function PostDetail({
   if (isNaN(id)) {
     return notFound();
   }
+
   const post = await getPost(id);
   if (!post) {
     return notFound();
   }
 
-  return <div />;
+  return (
+    <div className="p-5 text-white">
+      <div className="mb-2 flex items-center gap-2">
+        <Image
+          width={28}
+          height={28}
+          className="size-7 rounded-full"
+          src={post.user.avatar!}
+          alt={post.user.username}
+        />
+        <div>
+          <span className="text-sm font-semibold">{post.user.username}</span>
+          <div className="text-xs">
+            <span>{formatToTimeAgo(post.created_at.toString())}</span>
+          </div>
+        </div>
+      </div>
+      <h2 className="text-lg font-semibold">{post.title}</h2>
+      <p className="mb-5">{post.description}</p>
+      <div className="flex flex-col items-start gap-5">
+        <div className="flex items-center gap-2 text-sm text-neutral-400">
+          <EyeIcon className="size-5" />
+          <span>조회 {post.views}</span>
+        </div>
+        <form>
+          <button className="flex items-center gap-2 rounded-full border border-neutral-400 p-2 text-sm text-neutral-400 transition-colors hover:bg-neutral-800">
+            <HandThumbUpIcon className="size-5" />
+            <span>공감하기 ({post._count.likes})</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
