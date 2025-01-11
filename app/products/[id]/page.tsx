@@ -1,11 +1,12 @@
+import Image from "next/image";
+import { notFound, redirect } from "next/navigation";
+import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
+
 import { UserIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 
 async function getIsOwner(userId: number) {
   // getSession은 cookie를 사용합니다.
@@ -84,6 +85,30 @@ export default async function ProductDetail({
     revalidateTag("xxxx");
   };
 
+  const createChatRoom = async () => {
+    "use server";
+    const session = await getSession();
+    const room = await db.chatRoom.create({
+      data: {
+        users: {
+          connect: [
+            {
+              id: product.userId,
+            },
+            {
+              id: session.id,
+            },
+          ],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    redirect(`/chats/${room.id}`);
+  };
+
   return (
     <div>
       <div className="relative aspect-square">
@@ -122,12 +147,11 @@ export default async function ProductDetail({
             </button>
           </form>
         ) : null}
-        <Link
-          className="rounded-md bg-orange-500 px-5 py-2.5 font-semibold text-white"
-          href={``}
-        >
-          채팅하기
-        </Link>
+        <form action={createChatRoom}>
+          <button className="rounded-md bg-orange-500 px-5 py-2.5 font-semibold text-white">
+            채팅하기
+          </button>
+        </form>
       </div>
     </div>
   );
