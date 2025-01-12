@@ -81,8 +81,6 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
     return notFound();
   }
 
-  console.log(user.avatar);
-
   return (
     <ChatMessagesList
       initialMessages={initialMessages}
