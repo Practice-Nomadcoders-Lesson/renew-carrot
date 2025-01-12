@@ -8,6 +8,7 @@ import { cn, formatToTimeAgo } from "@/lib/utils";
 
 import { InitialChatMessages } from "@/app/chats/[id]/page";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
+import { saveMessage } from "@/app/chats/actions";
 
 const SUPABASE_PUBLIC_KEY = process.env.NEXT_PUBLIC_SUPABASE_API_KEY!;
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL!;
@@ -39,7 +40,7 @@ export default function ChatMessagesList({
     setMessage(value);
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setMessages((prevMsgs) => [
       ...prevMsgs,
@@ -55,6 +56,7 @@ export default function ChatMessagesList({
       },
     ]);
 
+    await saveMessage(message, chatRoomId);
     setMessage("");
 
     channel.current?.send({
