@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         roboto: "var(--roboto-text)",
         rubik: "var(--rubik-text)",
+        pretendard: "var(--pretendard-text)",
       },
     },
   },

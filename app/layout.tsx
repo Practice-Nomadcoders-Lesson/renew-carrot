@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto, Rubik_Scribble } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -24,6 +25,11 @@ export const metadata: Metadata = {
   description: "Sell and buy all the things!",
 };
 
+const pretendard = localFont({
+  src: "./pretendard.woff2",
+  variable: "--pretendard-text",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.variable} ${rubik.variable} mx-auto max-w-screen-sm bg-gray-900 text-white`}
+        className={`${roboto.variable} ${rubik.variable} ${pretendard.variable} mx-auto max-w-screen-sm bg-gray-900 text-white`}
       >
         {children}
       </body>
