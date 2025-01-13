@@ -1,4 +1,4 @@
-export default function Extras() {
+export default function Extras({ params }: { params: { potato: string[] } }) {
   return (
     <div className="flex flex-col gap-3 py-10">
       <h1 className="font-rubik text-6xl">Extras!</h1>
